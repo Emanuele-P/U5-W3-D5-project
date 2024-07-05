@@ -1,7 +1,6 @@
 package ep2024.u5w3d5.services;
 
 import ep2024.u5w3d5.entities.User;
-import ep2024.u5w3d5.enums.Role;
 import ep2024.u5w3d5.exceptions.BadRequestException;
 import ep2024.u5w3d5.exceptions.NotFoundException;
 import ep2024.u5w3d5.payloads.NewUserDTO;

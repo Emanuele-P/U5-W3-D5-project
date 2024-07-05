@@ -25,9 +25,6 @@ public record NewEventDTO(
         String location,
 
         @NotNull(message = "Available seats must not be null!")
-        Integer availableSeats,
-
-        @NotBlank(message = "Organizer ID must not be empty!")
-        String organizerId
+        Integer availableSeats
 ) {
 }
