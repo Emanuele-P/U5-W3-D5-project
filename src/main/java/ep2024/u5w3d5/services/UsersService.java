@@ -34,6 +34,10 @@ public class UsersService {
         return this.usersDAO.findById(userId).orElseThrow(() -> new NotFoundException(userId));
     }
 
+    public User findByEmail(String email){
+        return usersDAO.findByEmail(email).orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato!"));
+    }
+
     public User save(NewUserDTO body) {
         this.usersDAO.findByEmail(body.email()).ifPresent(
                 user -> {
@@ -41,7 +45,6 @@ public class UsersService {
                 }
         );
 
-        Role role = Role.valueOf(body.role().toUpperCase());
         User newUser = new User(body.name(), body.email(), bcrypt.encode(body.password()));
         return usersDAO.save(newUser);
     }
