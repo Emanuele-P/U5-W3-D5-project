@@ -1,9 +1,11 @@
 package ep2024.u5w3d5.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -27,5 +29,9 @@ public class Event {
         @ManyToOne
         @JoinColumn(name = "organizer_id")
         private User organizer;
+
+        @OneToMany(mappedBy = "event")
+        @JsonIgnore
+        private List<Reservation> reservations;
 }
 

@@ -1,6 +1,7 @@
 package ep2024.u5w3d5.controllers;
 
 import ep2024.u5w3d5.entities.Event;
+import ep2024.u5w3d5.entities.Reservation;
 import ep2024.u5w3d5.entities.User;
 import ep2024.u5w3d5.exceptions.BadRequestException;
 import ep2024.u5w3d5.payloads.NewEventDTO;
@@ -16,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -65,6 +67,15 @@ public class EventsController {
             @RequestParam(defaultValue = "date") String sortBy
     ) {
         return eventsService.getAllEvents(page, size, sortBy);
+    }
+
+    // GET http://localhost:3001/events/me/reservations
+    @GetMapping("/me/reservations")
+    @PreAuthorize("hasAuthority('USER')")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Reservation> getUserReservations(Authentication authentication) {
+        User currentUser = (User) authentication.getPrincipal();
+        return eventsService.getUserReservations(currentUser);
     }
 
     // POST http://localhost:3001/events/{id}/reservations
