@@ -11,7 +11,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class User {
     @Id
@@ -24,4 +23,11 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = Role.USER;
+    }
 }
