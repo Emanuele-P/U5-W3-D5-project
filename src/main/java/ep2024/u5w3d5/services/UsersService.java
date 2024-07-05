@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -19,6 +20,9 @@ import java.util.UUID;
 public class UsersService {
     @Autowired
     private UsersDAO usersDAO;
+
+    @Autowired
+    private PasswordEncoder bcrypt;
 
     public Page<User> getUsers(int pageNumber, int pageSize, String sortBy) {
         if (pageSize > 20) pageSize = 20;
@@ -38,7 +42,7 @@ public class UsersService {
         );
 
         Role role = Role.valueOf(body.role().toUpperCase());
-        User newUser = new User(body.name(), body.email(), body.password());
+        User newUser = new User(body.name(), body.email(), bcrypt.encode(body.password()));
         return usersDAO.save(newUser);
     }
 }
