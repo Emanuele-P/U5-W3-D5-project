@@ -72,6 +72,8 @@ public class EventsService {
             throw new BadRequestException("Only the organizer can delete this event.");
         }
 
+        List<Reservation> reservations = reservationsDAO.findByEventId(eventId);
+        reservations.forEach(reservation -> reservationsDAO.delete(reservation));
         eventsDAO.delete(event);
     }
 

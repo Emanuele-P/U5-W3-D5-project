@@ -11,4 +11,5 @@ import java.util.UUID;
 @Repository
 public interface ReservationsDAO extends JpaRepository<Reservation, UUID> {
     List<Reservation> findByUser(User user);
+    List<Reservation> findByEventId(UUID eventId);
 }
