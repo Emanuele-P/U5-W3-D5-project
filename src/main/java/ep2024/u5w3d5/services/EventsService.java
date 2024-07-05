@@ -106,4 +106,21 @@ public class EventsService {
     public List<Reservation> getUserReservations(User currentUser) {
         return reservationsDAO.findByUser(currentUser);
     }
+
+    @Transactional
+    public void deleteUserReservation(UUID reservationId, User currentUser) {
+        Reservation reservation = reservationsDAO.findById(reservationId)
+                .orElseThrow(() -> new NotFoundException(reservationId));
+
+        if (!reservation.getUser().getId().equals(currentUser.getId())) {
+            throw new BadRequestException("You can only delete your own reservations.");
+        }
+
+        Event event = reservation.getEvent();
+        event.setAvailableSeats(event.getAvailableSeats() + 1);
+        eventsDAO.save(event);
+
+        reservationsDAO.delete(reservation);
+    }
+
 }

@@ -86,4 +86,13 @@ public class EventsController {
         User currentUser = (User) authentication.getPrincipal();
         eventsService.reserveEvent(eventId, currentUser);
     }
+
+    // DELETE http://localhost:3001/events/me/reservations/{reservationId}
+    @DeleteMapping("/me/reservations/{reservationId}")
+    @PreAuthorize("hasAuthority('USER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUserReservation(@PathVariable UUID reservationId, Authentication authentication) {
+        User currentUser = (User) authentication.getPrincipal();
+        eventsService.deleteUserReservation(reservationId, currentUser);
+    }
 }
