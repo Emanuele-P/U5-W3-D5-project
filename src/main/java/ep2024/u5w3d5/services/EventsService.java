@@ -8,6 +8,10 @@ import ep2024.u5w3d5.payloads.NewEventDTO;
 import ep2024.u5w3d5.repositories.EventsDAO;
 import ep2024.u5w3d5.repositories.UsersDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -59,5 +63,23 @@ public class EventsService {
         }
 
         eventsDAO.delete(event);
+    }
+
+    public Page<Event> getAllEvents(int pageNumber, int pageSize, String sortBy) {
+        if (pageSize > 20) pageSize = 20;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+        return eventsDAO.findAll(pageable);
+    }
+
+    public void reserveEvent(UUID eventId, User currentUser) {
+        Event event = eventsDAO.findById(eventId)
+                .orElseThrow(() -> new NotFoundException(eventId));
+
+        if (event.getAvailableSeats() <= 0) {
+            throw new BadRequestException("No available seats for this event.");
+        }
+
+        event.setAvailableSeats(event.getAvailableSeats() - 1);
+        eventsDAO.save(event);
     }
 }

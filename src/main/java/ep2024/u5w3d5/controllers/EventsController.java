@@ -7,6 +7,7 @@ import ep2024.u5w3d5.payloads.NewEventDTO;
 import ep2024.u5w3d5.payloads.NewEventResponseDTO;
 import ep2024.u5w3d5.services.EventsService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,5 +54,25 @@ public class EventsController {
     public void deleteEvent(@PathVariable UUID eventId, Authentication authentication) {
         User currentUser = (User) authentication.getPrincipal();
         eventsService.findByIdAndDelete(eventId, currentUser);
+    }
+
+    // GET http://localhost:3001/events
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Page<Event> getAllEvents(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "date") String sortBy
+    ) {
+        return eventsService.getAllEvents(page, size, sortBy);
+    }
+
+    // POST http://localhost:3001/events/{id}/reservations
+    @PostMapping("/{eventId}/reservations")
+    @PreAuthorize("hasAuthority('USER')")
+    @ResponseStatus(HttpStatus.OK)
+    public void reserveEvent(@PathVariable UUID eventId, Authentication authentication) {
+        User currentUser = (User) authentication.getPrincipal();
+        eventsService.reserveEvent(eventId, currentUser);
     }
 }
